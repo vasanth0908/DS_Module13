@@ -1,109 +1,90 @@
-# Ex2 Conversion of the infix expression into postfix expression
+# Ex4 Evaluation of prefix expression
 ## DATE:
 ## AIM:
-To write a C program to convert the infix expression into postfix form using stack by following the operator precedence and associative rule.
+To write a C function to evaluate the given prefix expression using stack and print the output of the given prefix expression from the stack inside the function . 
 
 ## Algorithm
-1. Start the program
-2.Initialize an empty stack for operators
-3.Read the infix expression from the user
-4.Scan the expression from left to right
-5.If operand → add to postfix expression
-6.If ‘(’ → push to stack
-7.If ‘)’ → pop from stack until ‘(’ is found
-8.If operator →
-9.Pop operators from stack with higher or equal precedence
-10.Push current operator to stack
-11.After scanning, pop all remaining operators from stack
-12.Display the postfix expression
-13.Stop  
+1.Start the program
+2.Initialize an empty stack
+3.Read the prefix expression
+4.Scan the expression from right to left
+5.If operand → push to stack
+6.If operator →
+   Pop two operands from stack
+   Perform the operation
+   Push result back to stack
+7.Repeat until expression ends
+8.Final result will be at top of stack
+9.Display the result   
 
 ## Program:
 ```
 /*
-Program to convert the infix expression into postfix expression
+Program to evaluate the given prefix expression
 Developed by: ANUSHARON.S
-RegisterNumber: 212222240010
+RegisterNumber:  212222240010
 */
 
 #include<stdio.h>
 #include<ctype.h>
+#include<string.h>
 
-char stack[100];
+int stack[100];
 int top = -1;
 
-void push(char x)
+void push(int x)
 {
     stack[++top] = x;
 }
 
-char pop()
+int pop()
 {
     return stack[top--];
 }
 
-int precedence(char x)
-{
-    if(x == '+' || x == '-')
-        return 1;
-    if(x == '*' || x == '/')
-        return 2;
-    return 0;
-}
-
 int main()
 {
-    char infix[100], postfix[100];
-    int i, j = 0;
+    char prefix[100];
+    int i, op1, op2, result;
 
-    printf("Enter infix expression: ");
-    scanf("%s", infix);
+    printf("Enter prefix expression: ");
+    scanf("%s", prefix);
 
-    for(i = 0; infix[i] != '\0'; i++)
+    int len = strlen(prefix);
+
+    for(i = len - 1; i >= 0; i--)
     {
-        if(isalnum(infix[i]))  // operand
+        if(isdigit(prefix[i]))
         {
-            postfix[j++] = infix[i];
+            push(prefix[i] - '0'); // convert char to int
         }
-        else if(infix[i] == '(')
+        else
         {
-            push(infix[i]);
-        }
-        else if(infix[i] == ')')
-        {
-            while(stack[top] != '(')
+            op1 = pop();
+            op2 = pop();
+
+            switch(prefix[i])
             {
-                postfix[j++] = pop();
+                case '+': push(op1 + op2); break;
+                case '-': push(op1 - op2); break;
+                case '*': push(op1 * op2); break;
+                case '/': push(op1 / op2); break;
             }
-            pop(); // remove '('
-        }
-        else // operator
-        {
-            while(top != -1 && precedence(stack[top]) >= precedence(infix[i]))
-            {
-                postfix[j++] = pop();
-            }
-            push(infix[i]);
         }
     }
 
-    while(top != -1)
-    {
-        postfix[j++] = pop();
-    }
+    result = pop();
 
-    postfix[j] = '\0';
-
-    printf("Postfix expression: %s", postfix);
+    printf("Result = %d", result);
 
     return 0;
 }
 ```
 
 ## Output:
-<img width="475" height="239" alt="image" src="https://github.com/user-attachments/assets/3c744568-6545-4586-9f64-e6a23e9f0703" />
 
+<img width="463" height="215" alt="image" src="https://github.com/user-attachments/assets/96b48e2f-93f8-4742-980f-a60477f18274" />
 
 
 ## Result:
-Thus, the C program to convert the infix expression into postfix form using stack by following the operator precedence and associative rule is implemented successfully.
+Thus, the C program to evaluate the prefix expression using stack and print the output of the given prefix expression from the stack inside the function is implemented successfully.
